@@ -1,12 +1,7 @@
-box: debian:jessie-slim
+box: python:2.7.14-stretch
+
 build:
     steps:
-        - shellcheck
-
-        - script:
-            name: Install dependencies
-            code: |
-                apt-get update && apt-get install -y curl ca-certificates python && rm -rf /var/lib/apt/lists/* # wget netcat xz-utils  
 
         - script:
             name: config
