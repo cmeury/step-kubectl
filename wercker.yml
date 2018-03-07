@@ -7,15 +7,13 @@ build:
             name: Install dependencies
             code: |
                 apt-get update && apt-get install -y curl ca-certificates python && rm -rf /var/lib/apt/lists/* # wget netcat xz-utils  
-                # apt-get update && apt-get install -y curl wget ca-certificates netcat xz-utils python && rm -rf /var/lib/apt/lists/*
-
 
         - script:
             name: config
             code: |
-                GCLOUD_VERSION="189.0.0-linux-x86_64"
+                GCLOUD_VERSION="191.0.0-linux-x86_64"
                 export GCLOUD_DIRNAME="google-cloud-sdk"
-                export GCLOUD_SHA="70dcb28e205fe64b48b235f38cc35dcdc294b31aec4d873b61a468eb843d4b1f"
+                export GCLOUD_SHA256="25d476fc0d85fff8e745033b59a5d9688c832f3ae3901376d6686d933c7eddcd"
                 export GCLOUD_FILENAME="${GCLOUD_DIRNAME}-${GCLOUD_VERSION}.tar.gz"
                 export GCLOUD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/${GCLOUD_FILENAME}"
                 echo "Installing version ${GCLOUD_VERSION} of the Google Cloud SDK"
@@ -28,7 +26,7 @@ build:
         - script:
             name: Validate gcloud archive
             code: |
-                sha256sum ${GCLOUD_FILENAME} | grep -q "${GCLOUD_SHA}"
+                sha256sum ${GCLOUD_FILENAME} | grep -q "${GCLOUD_SHA256}"
 
         - script:
             name: Extract gcloud archive
@@ -53,6 +51,10 @@ build:
                 chmod ugo+rx "$WERCKER_OUTPUT_DIR/${GCLOUD_DIRNAME}/bin/gcloud"
                 rm -rf "${GCLOUD_DIRNAME}/platform/gsutil"
                 rm -rf "${GCLOUD_DIRNAME}/platform/bq"
+
+        - script:
+            name: print gcloud version
+            code: $WERCKER_OUTPUT_DIR/${GCLOUD_DIRNAME}/bin/gcloud version
 
 publish:
     steps:
